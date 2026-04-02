@@ -1,44 +1,51 @@
-import java.util.*;
-import java.util.stream.*;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-class Bogie {
-    String name;
-    int capacity;
-
-    Bogie(String name, int capacity) {
-        this.name = name;
-        this.capacity = capacity;
-    }
-}
-
-public class trainconsistmanagementApp {
+public class trainconsistmanagementApp{
 
     public static void main(String[] args) {
-        System.out.println("======================================");
-        System.out.println("UC10 - Count Total Seats in Train");
-        System.out.println("======================================\n");
+        // Welcome message
+        System.out.println("=== Train Consist Management App ===");
 
-        // Create list
-        List<Bogie> bogies = new ArrayList<>();
+        // Create Scanner for user input
+        Scanner scanner = new Scanner(System.in);
 
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 56));
-        bogies.add(new Bogie("First Class", 24));
-        bogies.add(new Bogie("Sleeper", 70));
+        // Ask user for Train ID
+        System.out.print("\nEnter Train ID (format TRN-1234): ");
+        String trainID = scanner.nextLine();
 
-        System.out.println("Bogies in Train:");
+        // Ask user for Cargo Code
+        System.out.print("Enter Cargo Code (format PET-AB): ");
+        String cargoCode = scanner.nextLine();
 
-        for (Bogie b : bogies) {
-            System.out.println(b.name + " -> " + b.capacity);
+        // Define regex patterns
+        String trainPattern = "TRN-\\d{4}";       // TRN- followed by exactly 4 digits
+        String cargoPattern = "PET-[A-Z]{2}";     // PET- followed by exactly 2 uppercase letters
+
+        // Compile patterns
+        Pattern trainRegex = Pattern.compile(trainPattern);
+        Pattern cargoRegex = Pattern.compile(cargoPattern);
+
+        // Match input
+        Matcher trainMatcher = trainRegex.matcher(trainID);
+        Matcher cargoMatcher = cargoRegex.matcher(cargoCode);
+
+        // Validate Train ID
+        if (trainMatcher.matches()) {
+            System.out.println("Train ID is valid.");
+        } else {
+            System.out.println("Invalid Train ID format!");
         }
 
-        // Aggregation using map + reduce
-        int totalCapacity = bogies.stream()
-                .map(b -> b.capacity)
-                .reduce(0, Integer::sum);
+        // Validate Cargo Code
+        if (cargoMatcher.matches()) {
+            System.out.println("Cargo Code is valid.");
+        } else {
+            System.out.println("Invalid Cargo Code format!");
+        }
 
-        System.out.println("\nTotal Seating Capacity of Train: " + totalCapacity);
-
-        System.out.println("\nUC10 aggregation completed...");
+        // Close scanner
+        scanner.close();
     }
 }
